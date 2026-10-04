@@ -1,4 +1,4 @@
-﻿{
+{
   "kind": "collectionType",
   "collectionName": "students",
   "info": {
@@ -28,7 +28,7 @@
     "CardID": {
       "type": "string",
       "minLength": 13,
-      "maxLength": 13,
+      "maxLength": 32,
       "required": true,
       "unique": true
     }

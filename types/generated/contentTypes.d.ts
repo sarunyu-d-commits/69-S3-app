@@ -458,7 +458,7 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 13;
+        maxLength: 32;
         minLength: 13;
       }>;
     createdAt: Schema.Attribute.DateTime;

@@ -20,7 +20,7 @@ const isBase64String = (value: string): boolean => {
   return true;
 };
 
-const encodeMobile = (value: unknown): string | null => {
+const encodeField = (value: unknown): string | null => {
   if (value === null || value === undefined) return null;
   const str = String(value).trim();
   if (str === '') return '';
@@ -37,7 +37,7 @@ const encodeMobile = (value: unknown): string | null => {
   }
 };
 
-const decodeMobile = (value: unknown): string | unknown => {
+const decodeField = (value: unknown): string | unknown => {
   if (value === null || value === undefined) return value;
   if (typeof value !== 'string') return value;
   const str = value.trim();
@@ -66,13 +66,19 @@ const transformEntityMobile = (entity: any): any => {
   // ???????????????? Strapi v5 (entity.data) ?????????????
   if (entity.data && typeof entity.data === 'object' && !Array.isArray(entity.data)) {
     if ('mobile' in entity.data) {
-      entity.data.mobile = decodeMobile(entity.data.mobile);
+      entity.data.mobile = decodeField(entity.data.mobile);
+    }
+    if ('CardID' in entity.data) {
+      entity.data.CardID = decodeField(entity.data.CardID);
     }
     return entity;
   }
 
   if ('mobile' in entity) {
-    entity.mobile = decodeMobile(entity.mobile);
+    entity.mobile = decodeField(entity.mobile);
+  }
+  if ('CardID' in entity) {
+    entity.CardID = decodeField(entity.CardID);
   }
 
   return entity;
@@ -112,7 +118,10 @@ export default factories.createCoreService('api::student.student', ({ strapi }) 
   async create(params: any) {
     if (params?.data && typeof params.data === 'object') {
       if ('mobile' in params.data) {
-        params.data.mobile = encodeMobile(params.data.mobile);
+        params.data.mobile = encodeField(params.data.mobile);
+      }
+      if ('CardID' in params.data) {
+        params.data.CardID = encodeField(params.data.CardID);
       }
     }
     const result = await super.create(params);
@@ -122,11 +131,15 @@ export default factories.createCoreService('api::student.student', ({ strapi }) 
   async createMany(params: any) {
     if (params?.data && Array.isArray(params.data)) {
       params.data = params.data.map((item: any) => {
-        if (item && typeof item === 'object' && 'mobile' in item) {
-          return {
-            ...item,
-            mobile: encodeMobile(item.mobile),
-          };
+        if (item && typeof item === 'object') {
+          const updated: any = { ...item };
+          if ('mobile' in updated) {
+            updated.mobile = encodeField(updated.mobile);
+          }
+          if ('CardID' in updated) {
+            updated.CardID = encodeField(updated.CardID);
+          }
+          return updated;
         }
         return item;
       });
@@ -138,7 +151,10 @@ export default factories.createCoreService('api::student.student', ({ strapi }) 
   async update(params: any) {
     if (params?.data && typeof params.data === 'object') {
       if ('mobile' in params.data) {
-        params.data.mobile = encodeMobile(params.data.mobile);
+        params.data.mobile = encodeField(params.data.mobile);
+      }
+      if ('CardID' in params.data) {
+        params.data.CardID = encodeField(params.data.CardID);
       }
     }
     const result = await super.update(params);
@@ -148,7 +164,10 @@ export default factories.createCoreService('api::student.student', ({ strapi }) 
   async updateMany(params: any) {
     if (params?.data && typeof params.data === 'object') {
       if ('mobile' in params.data) {
-        params.data.mobile = encodeMobile(params.data.mobile);
+        params.data.mobile = encodeField(params.data.mobile);
+      }
+      if ('CardID' in params.data) {
+        params.data.CardID = encodeField(params.data.CardID);
       }
     }
     const result = await super.updateMany(params);
