@@ -48,22 +48,31 @@ const decodeField = (value: unknown): string | unknown => {
   }
 };
 
+const maskField = (value: unknown): unknown => {
+  if (value === null || value === undefined) return value;
+  if (typeof value !== 'string') return value;
+  const str = value.trim();
+  if (str === '') return str;
+  if (str.length <= 3) return str;
+  return str.slice(0, -3) + 'xxx';
+};
+
 const transformEntity = (entity: any): any => {
   if (!entity || typeof entity !== 'object') return entity;
   if (entity.data && typeof entity.data === 'object' && !Array.isArray(entity.data)) {
     if ('mobile' in entity.data) {
-      entity.data.mobile = decodeField(entity.data.mobile);
+      entity.data.mobile = maskField(decodeField(entity.data.mobile));
     }
     if ('CardID' in entity.data) {
-      entity.data.CardID = decodeField(entity.data.CardID);
+      entity.data.CardID = maskField(decodeField(entity.data.CardID));
     }
     return entity;
   }
   if ('mobile' in entity) {
-    entity.mobile = decodeField(entity.mobile);
+    entity.mobile = maskField(decodeField(entity.mobile));
   }
   if ('CardID' in entity) {
-    entity.CardID = decodeField(entity.CardID);
+    entity.CardID = maskField(decodeField(entity.CardID));
   }
   return entity;
 };
