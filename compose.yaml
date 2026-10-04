@@ -1,0 +1,16 @@
+services:
+  69-S3-app:
+    image: ghcr.io/sarunyu-d-commits/69-s3-app:fest-student
+    container_name: 69-S3-app
+    ports:
+      - "1337:1337"
+    env_file:
+      - .env.docker
+    volumes:
+      - 69-S3-app-data:/opt/app/.tmp
+      - 69-S3-app-uploads:/opt/app/public/uploads
+    restart: unless-stopped
+
+volumes:
+  s3app-data:
+  s3app-uploads:
