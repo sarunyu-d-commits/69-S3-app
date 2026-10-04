@@ -1,4 +1,4 @@
-﻿/**
+/**
  * student service
  */
 
@@ -8,14 +8,14 @@ const isBase64String = (value: string): boolean => {
   if (typeof value !== 'string') return false;
   const str = value.trim();
   if (str === '') return false;
-  // ตรวจสอบรูปแบบ Base64 แบบพื้นฐาน (รองรับ + / =)
+  // ????????????? Base64 ?????????? (?????? + / =)
   if (!/^[A-Za-z0-9+/]*={0,2}$/.test(str)) {
-    // รองรับ Base64URL แบบ - _
+    // ?????? Base64URL ??? - _
     if (!/^[A-Za-z0-9_-]*={0,2}$/.test(str)) {
       return false;
     }
   }
-  // ความยาวต้องหาร 4 ลงตัว
+  // ?????????????? 4 ?????
   if (str.length % 4 !== 0) return false;
   return true;
 };
@@ -25,7 +25,7 @@ const encodeMobile = (value: unknown): string | null => {
   const str = String(value).trim();
   if (str === '') return '';
 
-  // ป้องกัน double encode (ถ้าเคยเข้ารหัสแล้วให้ไม่เข้ารหัสซ้ำ)
+  // ??????? double encode (???????????????????????????????????)
   if (isBase64String(str)) {
     return str;
   }
@@ -43,14 +43,14 @@ const decodeMobile = (value: unknown): string | unknown => {
   const str = value.trim();
   if (str === '') return str;
 
-  // ถ้าไม่ใช่รูปแบบ base64 ให้คืนค่าเดิม (กรณีข้อมูลเก่าไม่ถูกเข้ารหัส)
+  // ??????????????? base64 ????????????? (????????????????????????????)
   if (!isBase64String(str)) {
     return value;
   }
 
   try {
     const decoded = Buffer.from(str, 'base64').toString('utf8');
-    // ถ้า decode แล้วได้ค่าว่าง ไม่ควรคืนค่าว่าง ให้คืนค่าเดิมไว้ปลอดภัย
+    // ??? decode ?????????????? ???????????????? ???????????????????????
     if (decoded === '') {
       return value;
     }
@@ -63,7 +63,7 @@ const decodeMobile = (value: unknown): string | unknown => {
 const transformEntityMobile = (entity: any): any => {
   if (!entity || typeof entity !== 'object') return entity;
 
-  // รองรับทั้งรูปแบบ Strapi v5 (entity.data) และรูปแบบปกติ
+  // ???????????????? Strapi v5 (entity.data) ?????????????
   if (entity.data && typeof entity.data === 'object' && !Array.isArray(entity.data)) {
     if ('mobile' in entity.data) {
       entity.data.mobile = decodeMobile(entity.data.mobile);
@@ -81,20 +81,20 @@ const transformEntityMobile = (entity: any): any => {
 const transformEntitiesMobile = (entities: any): any => {
   if (!entities) return entities;
 
-  // กรณีเป็น Array
+  // ???????? Array
   if (Array.isArray(entities)) {
-    return entities.map((e) => transformEntityMobile(e));
+    return entities.map((e: any) => transformEntityMobile(e));
   }
 
-  // กรณีเป็น Paginated Result { data: [...], meta: {...} } ของ Strapi v5
+  // ???????? Paginated Result { data: [...], meta: {...} } ??? Strapi v5
   if (entities.data && Array.isArray(entities.data)) {
     return {
       ...entities,
-      data: entities.data.map((e) => transformEntityMobile(e)),
+      data: entities.data.map((e: any) => transformEntityMobile(e)),
     };
   }
 
-  // กรณีเป็น Single Entity
+  // ???????? Single Entity
   return transformEntityMobile(entities);
 };
 
