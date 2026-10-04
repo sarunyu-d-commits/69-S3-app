@@ -12,5 +12,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  s3app-data:
-  s3app-uploads:
+  69-S3-app-data:
+  69-S3-app-uploads:
